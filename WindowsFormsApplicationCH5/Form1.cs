@@ -113,6 +113,7 @@ namespace WindowsFormsApplicationCH5
         }
 
 #######
+        $$$$$
         //執行計算(=)符號
         private void bEQ_Click(object sender, EventArgs e)
         {
