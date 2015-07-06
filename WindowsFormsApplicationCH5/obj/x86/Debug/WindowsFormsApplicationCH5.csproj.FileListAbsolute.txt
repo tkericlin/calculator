@@ -9,5 +9,3 @@ c:\documents and settings\user1\my documents\visual studio 2010\Projects\Windows
 c:\documents and settings\user1\my documents\visual studio 2010\Projects\WindowsFormsApplicationCH5\WindowsFormsApplicationCH5\obj\x86\Debug\WindowsFormsApplicationCH5.pdb
 C:\Users\TK\Documents\Visual Studio 2013\WindowsFormsApplicationCH5\WindowsFormsApplicationCH5\obj\x86\Debug\WindowsFormsApplicationCH5.exe
 C:\Users\TK\Documents\Visual Studio 2013\WindowsFormsApplicationCH5\WindowsFormsApplicationCH5\obj\x86\Debug\WindowsFormsApplicationCH5.pdb
-C:\Users\TK\Documents\Visual Studio 2013\Projects\WindowsFormsApplicationCH5\WindowsFormsApplicationCH5\obj\x86\Debug\WindowsFormsApplicationCH5.exe
-C:\Users\TK\Documents\Visual Studio 2013\Projects\WindowsFormsApplicationCH5\WindowsFormsApplicationCH5\obj\x86\Debug\WindowsFormsApplicationCH5.pdb

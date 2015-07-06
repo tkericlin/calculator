@@ -92,7 +92,7 @@ namespace WindowsFormsApplicationCH5
 
 
 
-        //輸入運算元     
+        //輸入運算元
         double A = Double.NaN;                    // 把 A 設為浮點數, 但先不給予值, 而是NaN                                                       (Q1:什麼是NaN?)  (Q2: 放在這邊會變公用 )
         String op;                                // 設 參數op 去接未來的運算子
         private void bAdd_Click(object sender, EventArgs e)
