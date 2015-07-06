@@ -12,30 +12,41 @@ using System.Windows.Forms;
 // 2.按Clear後,問題會出現在+-*/之後
 // 3.[Line: 190-199] 試圖加入 Init功能 到 bClear_Click()中
 
-// 問題;
-// public 與 private差異? 
-// 用什麼語法或函式 將 private的值傳到外面的主程式中?
-// (Q1:什麼是NaN?)  (Q2: 放在這邊會變公用 )
-// (Q3: 跳出private void bClear_Click外面後, 紀錄值仍是之前輸入的 A值)
-// (Q4: 跳出private void bClear_Click外面後, 紀錄值仍是之前輸入的 A值)
-// (Q5: 跳出private void bClear_Click外面後, 紀錄值仍是之前輸入的 A值)
-
 
 
 namespace WindowsFormsApplicationCH5
 {
     public partial class Form1 : Form
     {
-        bool isStatusNew = true;
 
-        //int isClearNew =  
+        //數字鍵輸入用
+        //bool isStatusNew = true;
+        //輸入運算元用
+        //double A = Double.NaN;                    // 把 A 設為浮點數, 但先不給予值, 而是NaN                                                    
+        //String op;                                // 設 參數op 去接未來的運算子
+
+        //bClear用
+        //T.Text = "0";               //把看板歸零
+        // isStatusNew = true;      //把isStatusNew 轉為新的(true)
+        //double A = Double.NaN;      //把 A 指定設成 NaN                                                            
+        // double B = 0;
+        // double C = 0;
+        //op = null;                  //把 op 改為 null
+
+        // 利用 init 來統一初始化的工作
+        bool isStatusNew;
+        double A;
+        double B;
+        double C;
+        string op;
 
         public Form1()
         {
             InitializeComponent();
+
+            Init();                 //把Init初始化的動作放到這裡
         }
 
- 
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -53,7 +64,18 @@ namespace WindowsFormsApplicationCH5
             this.bDiv.Click += new System.EventHandler(this.bAdd_Click);
         }
 
+        //設定呼叫初始化(把初始化功能放到前面一點，約在Form1_Load後)
+        public void Init()
+        {
+            T.Text = "0";               //把看板歸零
+            isStatusNew = true;      //把isStatusNew 轉為新的(true)
+            A = Double.NaN;          //把 A 指定設成 NaN 
+            B = 0;
+            C = 0;
+            op = null;               //把 op 改為 null
+        }
 
+        // TODO: maybe have problem?
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             String S = e.KeyData.ToString();         //鍵盤名稱
@@ -67,12 +89,7 @@ namespace WindowsFormsApplicationCH5
                 }
                 T.Text += D;
             }
-
-            //請到From_Load去設定其他 b1~b9 , 共用此副程式
-        }
-
-
-
+        }//請到From_Load()去設定其他 b1~b9 , 共用此副程式
 
         private void b0_Click(object sender, EventArgs e)
         {
@@ -90,11 +107,7 @@ namespace WindowsFormsApplicationCH5
             T.Text += ((Button)sender).Text;    // 讓先前 紀錄的數值 接上 新的數字到尾端
         }
 
-
-
         //輸入運算元
-        double A = Double.NaN;                    // 把 A 設為浮點數, 但先不給予值, 而是NaN                                                       (Q1:什麼是NaN?)  (Q2: 放在這邊會變公用 )
-        String op;                                // 設 參數op 去接未來的運算子
         private void bAdd_Click(object sender, EventArgs e)
         {
             if (!Double.IsNaN(A))                 // 當 A = NaN 時 ==> Double.IsNaN(A) 值為 true ==> 所以 !true ==> false ==> 就不會進去
@@ -103,9 +116,9 @@ namespace WindowsFormsApplicationCH5
                 bEQ_Click(null, null);            //bEQ_Click代表呼叫bEQ按下去的功能, 前後兩個數值不重要, 所以給null
             }
 
-                // First Click +                  //因為從未按過+號, 所以要當A沒有值處理
+            // First Click +                  //因為從未按過+號, 所以要當A沒有值處理
             A = double.Parse(T.Text);             //當第一次按+號的時候, 用 A 紀錄數字看板上的數值
-            //T.Text = "0";                       //不要把看板數字歸0
+            //T.Text = "0";                       //不要把看板數字歸0(因為不符合人類看到計算機的直覺,而是應該要保留已輸入的數字)
             op = ((Button)sender).Tag.ToString(); //接著用op來紀錄目前點選之按鈕的Tag值(在bAdd下就是'+'了)
             isStatusNew = true;                   //輸入運算元之後,後面因為要準備承接新的數字,要把isStatusNew改成true
 
@@ -115,32 +128,22 @@ namespace WindowsFormsApplicationCH5
         //執行計算(=)符號
         private void bEQ_Click(object sender, EventArgs e)
         {
-                                                //按完Clear鍵之後, 這邊進入bEQ, 產生
-
-
-            double B = double.Parse(T.Text);    //用 B 來紀錄輸入的第二個數字
-            double C = 0;                       //宣告'變數C'準備承接計算的結果
-            switch (op)                         //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
+            //按完Clear鍵之後, 這邊進入bEQ, 產生
+            B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
+            C = 0;                               //宣告'變數C'準備承接計算的結果
+            switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
             {
                 case "+": C = A + B; break;
                 case "-": C = A - B; break;
                 case "*": C = A * B; break;
                 case "/": C = A / B; break;
             }
-            T.Text = C.ToString();              //把 答案C 顯示在看板上
-            //A = C;                              //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用
-            B = 0;                              //把 B歸0
-            C = 0;                              //把 C歸0
+            T.Text = C.ToString();               //把 答案C 顯示在看板上
+            //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
+            B = 0;                               //把 B歸0
+            C = 0;                               //把 C歸0
             A = Double.NaN;                      //把 = 後面加入運算子再加運算子後匯出的bug解掉
         }
-        
-
-
-
-
-
-
-
 
         //小數點
         private void bDot_Click(object sender, EventArgs e)
@@ -155,58 +158,24 @@ namespace WindowsFormsApplicationCH5
         private void bSign_Click(object sender, EventArgs e)
         {
             if (T.Text != "0")
-            { 
-                if (T.Text.IndexOf("-") >=0)
+            {
+                if (T.Text.IndexOf("-") >= 0)
                 {
-                    T.Text = T.Text.Replace("-","");  //把"-"取代成沒有負號
+                    T.Text = T.Text.Replace("-", "");  //把"-"取代成沒有負號
                 }
                 else
                 {
                     T.Text = "-" + T.Text;
                 }
-
             }
         }
-
-
-
 
         //清除功能鍵
         private void bClear_Click(object sender, EventArgs e)
         {
-            //T.Text = "0";             //把看板歸零
-            //A = 0;                    //把內部計算相關的參數也歸0
-            //op = "";                  //把內部計算相關的參數也歸0
-
-            
-            T.Text = "0";               //把看板歸零
-            isStatusNew = true;         //把isStatusNew 轉為新的(true)
-            double A = Double.NaN;      //把 A 指定設成 NaN                                                          (Q3: 跳出private void bClear_Click外面後, 紀錄值仍是之前輸入的 A值)
-            double B = 0;
-            double C = 0;
-            op = null;                  //把 op 改為 null
-            Init();                     // 新增; 呼叫 Init
-            //  InitializationEventAttribute                                                                         (Q4: 如何查詢使用方法?)
+            Init();
         }
 
-        
-        //設定呼叫初始化
-        public void Init()
-        {
-            T.Text = "0";               //把看板歸零
-            isStatusNew = true;         //把isStatusNew 轉為新的(true)
-            double A = Double.NaN;      //把 A 指定設成 NaN                                                            (Q5: 跳出private void bClear_Click外面後, 紀錄值仍是之前輸入的 A值)
-            double B = 0;
-            double C = 0;
-            op = null;                  //把 op 改為 null
-        }
-
-        /*
-        public InitializationEventAttribute(string eventName)
-        {
-            
-        }
-        */
 
         //倒退功能鍵
         private void bBack_Click(object sender, EventArgs e)
@@ -216,18 +185,15 @@ namespace WindowsFormsApplicationCH5
             if (S.Length > 1)       //判斷 S 的內容是否大於1
             {
                 T.Text = (double.Parse(S.Substring(0, S.Length - 1))).ToString();   //如果大於1, 作正常刪除尾端字元的動作
-                                                                                    //Substring是部份字串的意思,第一個參數是起始字元的索引,第二個參數是取出的字元數目 [S.Length就是整個S字串的長度]
+                //Substring是部份字串的意思,第一個參數是起始字元的索引,第二個參數是取出的字元數目 [S.Length就是整個S字串的長度]
             }
-            else 
+            else
             {
                 T.Text = "0";                                                       //如果 S的長度只剩下一個字元, 那麼按下去不論內容為何都應該歸0
-                                                                                    //這樣如果看板值為0, 使用者若繼續按倒退按鈕時, 程式才部會當掉, 看板值會一直保持是0
+                //這樣如果看板值為0, 使用者若繼續按倒退按鈕時, 程式才部會當掉, 看板值會一直保持是0
             }
         }
 
-       
 
-
-        
     }
 }
