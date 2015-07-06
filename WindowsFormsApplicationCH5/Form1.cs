@@ -112,8 +112,6 @@ namespace WindowsFormsApplicationCH5
             //最後會到From_Load去設定其他 - * / 共用此副程式
         }
 
-#######
-        $$$$$
         //執行計算(=)符號
         private void bEQ_Click(object sender, EventArgs e)
         {
