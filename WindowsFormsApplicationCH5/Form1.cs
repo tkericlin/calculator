@@ -40,10 +40,12 @@ namespace WindowsFormsApplicationCH5
         double C;
         string op;
 
-        public Form1()
+        private Helper helper;
+
+        public Form1()  // 建構子
         {
             InitializeComponent();
-
+            helper = new Helper();
             Init();                 //把Init初始化的動作放到這裡
         }
 
@@ -65,7 +67,7 @@ namespace WindowsFormsApplicationCH5
         }
 
         //設定呼叫初始化(把初始化功能放到前面一點，約在Form1_Load後)
-        public void Init()
+        private void Init()
         {
             T.Text = "0";               //把看板歸零
             isStatusNew = true;      //把isStatusNew 轉為新的(true)
@@ -133,10 +135,10 @@ namespace WindowsFormsApplicationCH5
             C = 0;                               //宣告'變數C'準備承接計算的結果
             switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
             {
-                case "+": C = A + B; break;
-                case "-": C = A - B; break;
-                case "*": C = A * B; break;
-                case "/": C = A / B; break;
+                case "+": C = helper.add(A, B); break;
+                case "-": C = helper.sub(A, B); break;
+                case "*": C = helper.mul(A, B); break;
+                case "/": C = helper.div(A, B); break;
             }
             T.Text = C.ToString();               //把 答案C 顯示在看板上
             //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
