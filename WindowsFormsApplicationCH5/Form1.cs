@@ -102,8 +102,7 @@ namespace WindowsFormsApplicationCH5
                 // Not First Click +              //因為不是第一次按+號,所以按完+號後,直接先做一次按"="的運算
                 bEQ_Click(null, null);            //bEQ_Click代表呼叫bEQ按下去的功能, 前後兩個數值不重要, 所以給null
             }
-######
-%%%%%%%%
+
                 // First Click +                  //因為從未按過+號, 所以要當A沒有值處理
             A = double.Parse(T.Text);             //當第一次按+號的時候, 用 A 紀錄數字看板上的數值
             //T.Text = "0";                       //不要把看板數字歸0
