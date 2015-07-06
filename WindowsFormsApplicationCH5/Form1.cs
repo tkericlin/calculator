@@ -128,9 +128,10 @@ namespace WindowsFormsApplicationCH5
                 case "/": C = A / B; break;
             }
             T.Text = C.ToString();              //把 答案C 顯示在看板上
-            A = C;                              //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用
+            //A = C;                              //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用
             B = 0;                              //把 B歸0
             C = 0;                              //把 C歸0
+            A = Double.NaN;                      //把 = 後面加入運算子再加運算子後匯出的bug解掉
         }
         
 
