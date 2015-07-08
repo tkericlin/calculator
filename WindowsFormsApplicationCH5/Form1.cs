@@ -42,7 +42,7 @@ namespace WindowsFormsApplicationCH5
         double C;
         string op;
         //string[] Recorder = new string[4];          //要4個空間，要宣告4，[不是宣告3而有0,1,2,3的空間可以用]，是宣告4!!!
-        List<string> RecorderList = new List<string>();   //開一個 不用宣告大小的動態陣列 RecorderList
+        List<string> RecorderList = new List<string>();   //宣告一個 不用宣告大小的動態陣列，名稱叫做 RecorderList，型別為<string>
 
         private Helper helper;
 
@@ -80,7 +80,7 @@ namespace WindowsFormsApplicationCH5
             C = 0;
             op = null;               //把 op 改為 null
             //string[] Recorder = { null, null, null, null };
-            List<string> RecorderList = new List<string>();   //開一個 不用宣告大小的動態陣列 RecorderList
+            List<string> RecorderList = new List<string>();   //開一個 不用宣告大小的動態陣列 RecorderList(把它清空設為null)
         }
 
         // TODO: maybe have problem?
@@ -144,6 +144,7 @@ namespace WindowsFormsApplicationCH5
             B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
             //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
             RecorderList.Add(T.Text);  //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
+                                       //我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
             C = 0;                               //宣告'變數C'準備承接計算的結果
             switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
             {
@@ -222,7 +223,7 @@ namespace WindowsFormsApplicationCH5
             
             for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
             {
-                sw.WriteLine( RecorderList[i] );
+                sw.WriteLine(RecorderList[i]);                  //但這樣的作法只是將每個數字一行行列出，並未做到 等號後 直接印出整行的運算
             }
             
             /*
@@ -239,3 +240,38 @@ namespace WindowsFormsApplicationCH5
         }
     }
 }
+
+/*
+我不太確定以下問法是否合宜或正確，我試著用文字來表達過程。
+我覺得還需要一點時間來測試跟解決debug上乘是不能動的問題。
+
+
+1.目前已知 List<T> 的功能是 C#提供的一個 動態陣列，不必是先宣告 List的大小<或長度>
+
+2.我在一開始宣告變數的地方 List<string> RecorderList = new List<string>();   //宣告一個 不用宣告大小的動態陣列，名稱叫做 RecorderList，型別為<string>
+
+3.在按 +-* / 的位置，用 RecorderList.Add(T.Text) 去接 第一個輸入數字 的字串；
+4.並再接 運算子 的 字串
+
+5.在 "=" 功能裡，用 RecorderList.Add(T.Text) 去接 第二個數字的字串
+//我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
+
+6.最後期望寫一個writeLog(); 試著把運算過程寫入Log
+
+
+        private void writeLog()
+        {           
+            bool b = File.Exists(@"c:\calculator_log.txt");
+            File.Create(@"c:\calculator_log.txt");    //這一段語法在debug過程有誤，我要再查。
+ 
+            StreamWriter sw = new StreamWriter(@"c:\calculator_log.txt");
+
+            
+            for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
+            {
+                sw.WriteLine( RecorderList[i] );		//但這樣的作法只是將每個數字一行行列出，並未做到 等號後 直接印出整行的運算
+            }
+            
+            sw.Close();
+         } 
+*/
