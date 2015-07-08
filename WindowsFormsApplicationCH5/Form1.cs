@@ -41,11 +41,8 @@ namespace WindowsFormsApplicationCH5
         double B;
         double C;
         string op;
-        string[] Recorder = new string[3];
-        string[] Recorder1 = new string[0];
-        string[] Recorder2 = new string[0];
-        string[] Recorder3 = new string[0];
-        string[] Recorder4 = new string[0];
+        //string[] Recorder = new string[4];          //要4個空間，要宣告4，[不是宣告3而有0,1,2,3的空間可以用]，是宣告4!!!
+        List<string> RecorderList = new List<string>();   //開一個 不用宣告大小的動態陣列 RecorderList
 
         private Helper helper;
 
@@ -82,11 +79,8 @@ namespace WindowsFormsApplicationCH5
             B = 0;
             C = 0;
             op = null;               //把 op 改為 null
-            string[] Recorder = { null, null, null, null };
-            string[] Recorder1 = { null };
-            string[] Recorder2 = { null };
-            string[] Recorder3 = { null };
-            string[] Recorder4 = { null };
+            //string[] Recorder = { null, null, null, null };
+            List<string> RecorderList = new List<string>();   //開一個 不用宣告大小的動態陣列 RecorderList
         }
 
         // TODO: maybe have problem?
@@ -131,14 +125,14 @@ namespace WindowsFormsApplicationCH5
             }
 
             // First Click +                      //因為從未按過+號, 所以要當A沒有值處理
-            A = double.Parse(T.Text);                       //當第一次按+號的時候, 用 A 紀錄數字看板上的數值
-            Recorder[0] = T.Text;                         //紀錄A的值為字串存入Recorder[0]
-            Recorder1[0] = T.Text;
-            //T.Text = "0";                                 //不要把看板數字歸0(因為不符合人類看到計算機的直覺,而是應該要保留已輸入的數字)
-            op = ((Button)sender).Tag.ToString();           //接著用op來紀錄目前點選之按鈕的Tag值(在bAdd下就是'+'了)
-            Recorder[1] = ((Button)sender).Tag.ToString();  //紀錄op的值為字串存入Recorder[1]
-            Recorder2[0] = T.Text;
-            isStatusNew = true;                             //輸入運算元之後,後面因為要準備承接新的數字,要把isStatusNew改成true
+            A = double.Parse(T.Text);                           //當第一次按+號的時候, 用 A 紀錄數字看板上的數值
+            //Recorder[0] = T.Text;                               //紀錄A的值為字串存入Recorder[0]
+            RecorderList.Add(T.Text);                           //紀錄A的值為字串存入RecorderList[在List 裡新增string 字串]
+            //T.Text = "0";                                     //不要把看板數字歸0(因為不符合人類看到計算機的直覺,而是應該要保留已輸入的數字)
+            op = ((Button)sender).Tag.ToString();               //接著用op來紀錄目前點選之按鈕的Tag值(在bAdd下就是'+'了)
+            //Recorder[1] = ((Button)sender).Tag.ToString();      //紀錄op的值為字串存入Recorder[1]
+            RecorderList.Add(((Button)sender).Tag.ToString());  //紀錄op的符號為字串存入RecorderList[在List 裡新增string 字串]
+            isStatusNew = true;                                 //輸入運算元之後,後面因為要準備承接新的數字,要把isStatusNew改成true
 
             //最後會到From_Load去設定其他 - * / 共用此副程式
         }
@@ -148,8 +142,8 @@ namespace WindowsFormsApplicationCH5
         {
             //按完Clear鍵之後, 這邊進入bEQ, 產生
             B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
-            Recorder[2] = T.Text;                ////紀錄B的值為字串存入Recorder[2]
-            Recorder3[0] = T.Text;
+            //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
+            RecorderList.Add(T.Text);  //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
             C = 0;                               //宣告'變數C'準備承接計算的結果
             switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
             {
@@ -159,8 +153,8 @@ namespace WindowsFormsApplicationCH5
                 case "/": C = helper.div(A, B); break;
             }
             T.Text = C.ToString();               //把 答案C 顯示在看板上
-            Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
-            Recorder4[0] = T.Text;
+            //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
+            RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
             writeLog();                          //把運算過程寫入Log;
             //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
@@ -219,30 +213,29 @@ namespace WindowsFormsApplicationCH5
 
         //讀寫檔案功能
         private void writeLog()
-        {
-            //string Recorder_WriteLog = Recorder[0] + Recorder[2] + Recorder[1] + "=" + Recorder[3];
-            string Recorder_WriteLog = Recorder1[0] + Recorder2[0] + Recorder3[0] + "=" + Recorder4[0];
-            
+        {           
             bool b = File.Exists(@"c:\calculator_log.txt");
-            
-            if (b != true)
-            {
-                File.Create(@"c:\calculator_log.txt");
-            }
-
+            File.Create(@"c:\calculator_log.txt");
+ 
             StreamWriter sw = new StreamWriter(@"c:\calculator_log.txt");
-            sw.WriteLine(Recorder_WriteLog);
+
+            
+            for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
+            {
+                sw.WriteLine( RecorderList[i] );
+            }
+            
+            /*
+            foreach (string RecorderList in RecorderList)
+            {
+                Console.WriteLine(RecorderList);
+            }
+            */
+
             sw.Close();
 
-            //將Recorder重設
-            Recorder[0] = null ;
-            Recorder[1] = null ;
-            Recorder[2] = null ;
-            Recorder[3] = null ;
-            Recorder1[0] = null;
-            Recorder2[0] = null;
-            Recorder3[0] = null;
-            Recorder4[0] = null;
+            //將RecorderList重設
+
         }
     }
 }
