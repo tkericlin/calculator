@@ -6,11 +6,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 // 2015.06.26 增刪
 // 1.加入連續+-*/功能 
 // 2.按Clear後,問題會出現在+-*/之後
 // 3.[Line: 190-199] 試圖加入 Init功能 到 bClear_Click()中
+// 07/08 嘗試加入讀寫檔案的功能，利用Recorder[]紀錄A,B,C數值轉為字串並存入
 
 
 
@@ -39,6 +41,7 @@ namespace WindowsFormsApplicationCH5
         double B;
         double C;
         string op;
+        string[] Recorder;
 
         private Helper helper;
 
@@ -75,6 +78,7 @@ namespace WindowsFormsApplicationCH5
             B = 0;
             C = 0;
             op = null;               //把 op 改為 null
+            string[] Recorder = { null };
         }
 
         // TODO: maybe have problem?
@@ -120,6 +124,7 @@ namespace WindowsFormsApplicationCH5
 
             // First Click +                  //因為從未按過+號, 所以要當A沒有值處理
             A = double.Parse(T.Text);             //當第一次按+號的時候, 用 A 紀錄數字看板上的數值
+            Recorder[0] = T.Text;                 //紀錄A的值為字串存入Recorder[0]
             //T.Text = "0";                       //不要把看板數字歸0(因為不符合人類看到計算機的直覺,而是應該要保留已輸入的數字)
             op = ((Button)sender).Tag.ToString(); //接著用op來紀錄目前點選之按鈕的Tag值(在bAdd下就是'+'了)
             isStatusNew = true;                   //輸入運算元之後,後面因為要準備承接新的數字,要把isStatusNew改成true
@@ -132,6 +137,7 @@ namespace WindowsFormsApplicationCH5
         {
             //按完Clear鍵之後, 這邊進入bEQ, 產生
             B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
+            Recorder[1] = T.Text;                ////紀錄B的值為字串存入Recorder[1]
             C = 0;                               //宣告'變數C'準備承接計算的結果
             switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
             {
@@ -141,6 +147,7 @@ namespace WindowsFormsApplicationCH5
                 case "/": C = helper.div(A, B); break;
             }
             T.Text = C.ToString();               //把 答案C 顯示在看板上
+            Recorder[2] = C.ToString();                ////紀錄C的值為字串存入Recorder[2]
             //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
             C = 0;                               //把 C歸0
@@ -195,6 +202,10 @@ namespace WindowsFormsApplicationCH5
                 //這樣如果看板值為0, 使用者若繼續按倒退按鈕時, 程式才部會當掉, 看板值會一直保持是0
             }
         }
+
+        //讀寫檔案功能
+
+
 
 
     }
