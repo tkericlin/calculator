@@ -121,7 +121,7 @@ namespace WindowsFormsApplicationCH5
             if (!Double.IsNaN(A))                 // 當 A = NaN 時 ==> Double.IsNaN(A) 值為 true ==> 所以 !true ==> false ==> 就不會進去
             {
                 // Not First Click +              //因為不是第一次按+號,所以按完+號後,直接先做一次按"="的運算
-                bEQ_Click(null, null);                      //bEQ_Click代表呼叫bEQ按下去的功能, 前後兩個數值不重要, 所以給null
+                bEQ_OP_Click(null, null);                      //bEQ_Click代表呼叫bEQ按下去的功能, 前後兩個數值不重要, 所以給null
             }
 
             // First Click +                      //因為從未按過+號, 所以要當A沒有值處理
@@ -183,7 +183,7 @@ namespace WindowsFormsApplicationCH5
             T.Text = C.ToString();               //把 答案C 顯示在看板上
             //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
             RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
-            writeLog();                          //把運算過程寫入Log;
+            //writeLog();                          //把運算過程寫入Log; 這裡是繼續相加減乘除，還不用寫檔
             //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
             C = 0;                               //把 C歸0
@@ -262,10 +262,6 @@ namespace WindowsFormsApplicationCH5
 
             //將RecorderList重設
             RecorderList.Clear();                                       //Clear 方法會用來從清單移除所有項目[Count會清空，Capacity會不變]
-            Console.WriteLine("\nClear()");                             //"\n"的功用是先跳一行，再顯示"Clear()"的文字
-            Console.WriteLine("Capacity: {0}", RecorderList.Capacity);  //顯示RecorderList的"Capacity：{0}"有多少的文字
-            Console.WriteLine("Count: {0}", RecorderList.Count);        //顯示RecorderList的"Count：{0}"有多少的文字
-            Console.ReadKey();                                          //輸入任何案件才結束Console視窗
         }//讀寫檔案功能--結束
     }
 }
