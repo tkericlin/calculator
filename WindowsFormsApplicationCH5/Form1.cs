@@ -156,6 +156,33 @@ namespace WindowsFormsApplicationCH5
             T.Text = C.ToString();               //把 答案C 顯示在看板上
             //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
             RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
+            RecorderList.Add("N");               //因為要結算，特別在等號後的C接著再紀錄一個分隔符號，自定的，例如 N，因為簡易計算機應該不有Ｎ
+            writeLog();                          //把運算過程寫入Log;
+            //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
+            B = 0;                               //把 B歸0
+            C = 0;                               //把 C歸0
+            A = Double.NaN;                      //把 = 後面加入運算子再加運算子後匯出的bug解掉
+        }
+
+        private void bEQ_OP_Click(object sender, EventArgs e)
+        {
+            //按完Clear鍵之後, 這邊進入bEQ, 產生
+            B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
+            //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
+            RecorderList.Add(T.Text);  //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
+            //我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
+            //所以bEQ_OP_Click的功能，是用來給加減乘除鍵連續使用的
+            C = 0;                               //宣告'變數C'準備承接計算的結果
+            switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
+            {
+                case "+": C = helper.add(A, B); break;
+                case "-": C = helper.sub(A, B); break;
+                case "*": C = helper.mul(A, B); break;
+                case "/": C = helper.div(A, B); break;
+            }
+            T.Text = C.ToString();               //把 答案C 顯示在看板上
+            //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
+            RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
             writeLog();                          //把運算過程寫入Log;
             //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
@@ -212,32 +239,34 @@ namespace WindowsFormsApplicationCH5
             }
         }
 
-        //讀寫檔案功能
+        //讀寫檔案功能--開始
         private void writeLog()
         {           
-            bool b = File.Exists(@"c:\calculator_log.txt");
-            File.Create(@"c:\calculator_log.txt");
+            //bool b = File.Exists(@"C:\calculator_log.txt");
+            //File.Create(@"C:\calculator_log.txt");
  
-            StreamWriter sw = new StreamWriter(@"c:\calculator_log.txt");
-
+            StreamWriter sw = new StreamWriter(@"C:\calculator_log.txt");
             
             for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
             {
-                sw.WriteLine(RecorderList[i]);                  //但這樣的作法只是將每個數字一行行列出，並未做到 等號後 直接印出整行的運算
-            }
-            
-            /*
-            foreach (string RecorderList in RecorderList)
-            {
-                Console.WriteLine(RecorderList);
-            }
-            */
+                if (RecorderList[i] == "N")
+                {
+                    sw.WriteLine(RecorderList[i]);              //遇到 N 的時候，寫入檔案最末並換行 [如：a, +, b, +, c, = , 5, N 然後換行]
+                }
 
-            sw.Close();
+                sw.Write(RecorderList[i]);                      //沒遇到 N 的時候，一直在同一行寫下去 [如：a, +, b, +, c, = , 5]
+
+            }//研究foreach的寫法，我試著寫了一次發現有點問題，再找時間研究
+            
+            sw.Close();                                         //關檔並紀錄 sw 用來入.txt檔案中
 
             //將RecorderList重設
-
-        }
+            RecorderList.Clear();                                       //Clear 方法會用來從清單移除所有項目[Count會清空，Capacity會不變]
+            Console.WriteLine("\nClear()");                             //"\n"的功用是先跳一行，再顯示"Clear()"的文字
+            Console.WriteLine("Capacity: {0}", RecorderList.Capacity);  //顯示RecorderList的"Capacity：{0}"有多少的文字
+            Console.WriteLine("Count: {0}", RecorderList.Count);        //顯示RecorderList的"Count：{0}"有多少的文字
+            Console.ReadKey();                                          //輸入任何案件才結束Console視窗
+        }//讀寫檔案功能--結束
     }
 }
 
@@ -269,7 +298,7 @@ namespace WindowsFormsApplicationCH5
             
             for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
             {
-                sw.WriteLine( RecorderList[i] );		//但這樣的作法只是將每個數字一行行列出，並未做到 等號後 直接印出整行的運算
+                sw.WriteLine( RecorderList[i] );		//但這樣的作法只是將每個數字一行行列出，並未做到 等號後 直接印出整行的運算，可能會運用到Stack的功能
             }
             
             sw.Close();
