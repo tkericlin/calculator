@@ -241,14 +241,23 @@ namespace WindowsFormsApplicationCH5
             }
         }
 
-        //讀寫檔案功能--開始
+        //寫檔功能--開始
         private void writeLog()
-        {           
-            //bool b = File.Exists(@"C:\calculator_log.txt");
-            //File.Create(@"C:\calculator_log.txt");
- 
+        {
+            //試著檢查calculator_log.txt是否有內容，有的話，讀取全部定重新寫入，以確保內容不會被消除==>但顯然這段語法在這裡有問題
+            //[參考Ref: https://msdn.microsoft.com/zh-tw/library/3zc0w663(v=vs.110).aspx]
+            StreamReader sr = new StreamReader(@"c:\calculator_log.txt");
+            string line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                Console.WriteLine(line);
+            }
+
+            //
             StreamWriter sw = new StreamWriter(@"C:\calculator_log.txt");
-            
+
+            sw.Write("\r\nLog Entry : ");
+            sw.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
             for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
             {
                 if (RecorderList[i] == "N")
@@ -257,14 +266,27 @@ namespace WindowsFormsApplicationCH5
                 }
 
                 sw.Write(RecorderList[i]);                      //沒遇到 N 的時候，一直在同一行寫下去 [如：a, +, b, +, c, = , 5]
-
             }//研究foreach的寫法，我試著寫了一次發現有點問題，再找時間研究
-            
+            sw.WriteLine("-------------------------------");
+
             sw.Close();                                         //關檔並紀錄 sw 用來入.txt檔案中
 
             //將RecorderList重設
             RecorderList.Clear();                                       //Clear 方法會用來從清單移除所有項目[Count會清空，Capacity會不變]
-        }//讀寫檔案功能--結束
+
+        }//寫檔功能--結束
+
+        //讀檔功能
+        public static void DumpLog(StreamReader r)
+        {
+            string line;
+            while ((line = r.ReadLine()) != null)
+            {
+                Console.WriteLine(line);
+            }
+        }//讀檔功能--結束
+
+
     }
 }
 
