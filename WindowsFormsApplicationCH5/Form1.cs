@@ -155,6 +155,7 @@ namespace WindowsFormsApplicationCH5
             }
             T.Text = C.ToString();               //把 答案C 顯示在看板上
             //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
+            RecorderList.Add(" = ");
             RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
             RecorderList.Add("N");               //因為要結算，特別在等號後的C接著再紀錄一個分隔符號，自定的，例如 N，因為簡易計算機應該不有Ｎ
             writeLog();                          //把運算過程寫入Log;
@@ -169,7 +170,8 @@ namespace WindowsFormsApplicationCH5
             //按完Clear鍵之後, 這邊進入bEQ, 產生
             B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
             //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
-            RecorderList.Add(T.Text);  //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
+            RecorderList.Add(T.Text);   //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
+            RecorderList.Add(" === ");  //紀錄並區分前兩個運算元計算的結果
             //我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
             //所以bEQ_OP_Click的功能，是用來給加減乘除鍵連續使用的
             C = 0;                               //宣告'變數C'準備承接計算的結果
@@ -182,7 +184,7 @@ namespace WindowsFormsApplicationCH5
             }
             T.Text = C.ToString();               //把 答案C 顯示在看板上
             //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
-            RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
+//            RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
             //writeLog();                          //把運算過程寫入Log; 這裡是繼續相加減乘除，還不用寫檔
             //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
