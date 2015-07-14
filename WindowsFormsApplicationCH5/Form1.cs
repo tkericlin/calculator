@@ -245,13 +245,13 @@ namespace WindowsFormsApplicationCH5
         private void writeLog()
         {
             //試著檢查calculator_log.txt是否有內容，有的話，讀取全部定重新寫入，以確保內容不會被消除==>但顯然這段語法在這裡有問題
-            //[參考Ref: https://msdn.microsoft.com/zh-tw/library/3zc0w663(v=vs.110).aspx]
-            StreamReader sr = new StreamReader(@"c:\calculator_log.txt");
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                Console.WriteLine(line);
-            }
+            //[參考ref: https://msdn.microsoft.com/zh-tw/library/3zc0w663(v=vs.110).aspx]
+            //streamreader sr = new streamreader(@"c:\calculator_log.txt");
+            //string line;
+            //while ((line = sr.readline()) != null)
+            //{
+            //    console.writeline(line);
+            //}
 
             //
             StreamWriter sw = new StreamWriter(@"C:\calculator_log.txt");
