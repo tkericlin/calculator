@@ -42,7 +42,7 @@ namespace WindowsFormsApplicationCH5
                 case "*": C = mul(A, B); break;
                 case "/": C = div(A, B); break;
             }
-            //T.Text = C.ToString();               //把 答案C 顯示在看板上
+            //T.Text = C.ToString();               //把 答案C 顯示在看板上[這邊註解掉，]
             return C;
         }
 

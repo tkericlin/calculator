@@ -125,11 +125,7 @@ namespace WindowsFormsApplicationCH5
 
             // First Click +                      //因為從未按過+號, 所以要當A沒有值處理
             A = double.Parse(T.Text);                           //當第一次按+號的時候, 用 A 紀錄數字看板上的數值
-            //Recorder[0] = T.Text;                               //紀錄A的值為字串存入Recorder[0]
-            //RecorderList.Add(T.Text);                           //紀錄A的值為字串存入RecorderList[在List 裡新增string 字串]
-            //T.Text = "0";                                     //不要把看板數字歸0(因為不符合人類看到計算機的直覺,而是應該要保留已輸入的數字)
             op = ((Button)sender).Tag.ToString();               //接著用op來紀錄目前點選之按鈕的Tag值(在bAdd下就是'+'了)
-            //Recorder[1] = ((Button)sender).Tag.ToString();      //紀錄op的值為字串存入Recorder[1]
             RecorderList.Add(((Button)sender).Tag.ToString());  //紀錄op的符號為字串存入RecorderList[在List 裡新增string 字串]
             isStatusNew = true;                                 //輸入運算元之後,後面因為要準備承接新的數字,要把isStatusNew改成true
 
@@ -141,7 +137,6 @@ namespace WindowsFormsApplicationCH5
         {
             //按完Clear鍵之後, 這邊進入bEQ, 產生
             B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
-            //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
             RecorderList.Add(T.Text);  //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
                                        //我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
             double ans = helper.calculate(A, B, op);
@@ -159,17 +154,10 @@ namespace WindowsFormsApplicationCH5
         {
             //按完Clear鍵之後, 這邊進入bEQ, 產生
             B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
-            //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
-           // RecorderList.Add(T.Text);   //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
-            //RecorderList.Add(" === ");  //紀錄並區分前兩個運算元計算的結果
             //我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
             //所以bEQ_OP_Click的功能，是用來給加減乘除鍵連續使用的
             double ans = helper.calculate(A, B, op);
             T.Text = ans.ToString();
-            //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
-//            RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
-            //writeLog();                          //把運算過程寫入Log; 這裡是繼續相加減乘除，還不用寫檔
-            //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
             A = Double.NaN;                      //把 = 後面加入運算子再加運算子後匯出的bug解掉
         }
@@ -230,18 +218,9 @@ namespace WindowsFormsApplicationCH5
         {
             //試著檢查calculator_log.txt是否有內容，有的話，讀取全部定重新寫入，以確保內容不會被消除==>但顯然這段語法在這裡有問題
             //[參考ref: https://msdn.microsoft.com/zh-tw/library/3zc0w663(v=vs.110).aspx]
-            //streamreader sr = new streamreader(@"c:\calculator_log.txt");
-            //string line;
-            //while ((line = sr.readline()) != null)
-            //{
-            //    console.writeline(line);
-            //}
-
             
-            StreamWriter sw = new StreamWriter(@"C:\calculator_log.txt", true);
-
-            //sw.Write("\r\nLog Entry : ");
-            sw.Write("{0}#", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            StreamWriter sw = new StreamWriter(@"C:\calculator_log.txt", true);  // true: append
+            sw.Write("{0},", DateTime.Now.ToString("yyyyMMddHHmmssffff"));
             for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
             {
                 if (RecorderList[i] == "N")
@@ -254,8 +233,6 @@ namespace WindowsFormsApplicationCH5
                 }
                                     //沒遇到 N 的時候，一直在同一行寫下去 [如：a, +, b, +, c, = , 5]
             }//研究foreach的寫法，我試著寫了一次發現有點問題，再找時間研究
-            //sw.WriteLine("-------------------------------");
-
             sw.Close();                                         //關檔並紀錄 sw 用來入.txt檔案中
 
             //將RecorderList重設
