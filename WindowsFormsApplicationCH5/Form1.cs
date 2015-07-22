@@ -39,7 +39,6 @@ namespace WindowsFormsApplicationCH5
         bool isStatusNew;
         double A;
         double B;
-        double C;
         string op;
         //string[] Recorder = new string[4];          //要4個空間，要宣告4，[不是宣告3而有0,1,2,3的空間可以用]，是宣告4!!!
         List<string> RecorderList = new List<string>();   //宣告一個 不用宣告大小的動態陣列，名稱叫做 RecorderList，型別為<string>
@@ -77,7 +76,6 @@ namespace WindowsFormsApplicationCH5
             isStatusNew = true;      //把isStatusNew 轉為新的(true)
             A = Double.NaN;          //把 A 指定設成 NaN 
             B = 0;
-            C = 0;
             op = null;               //把 op 改為 null
             //string[] Recorder = { null, null, null, null };
             List<string> RecorderList = new List<string>();   //開一個 不用宣告大小的動態陣列 RecorderList(把它清空設為null)
@@ -118,6 +116,7 @@ namespace WindowsFormsApplicationCH5
         //輸入運算元
         private void bAdd_Click(object sender, EventArgs e)
         {
+            RecorderList.Add(T.Text); 
             if (!Double.IsNaN(A))                 // 當 A = NaN 時 ==> Double.IsNaN(A) 值為 true ==> 所以 !true ==> false ==> 就不會進去
             {
                 // Not First Click +              //因為不是第一次按+號,所以按完+號後,直接先做一次按"="的運算
@@ -127,7 +126,7 @@ namespace WindowsFormsApplicationCH5
             // First Click +                      //因為從未按過+號, 所以要當A沒有值處理
             A = double.Parse(T.Text);                           //當第一次按+號的時候, 用 A 紀錄數字看板上的數值
             //Recorder[0] = T.Text;                               //紀錄A的值為字串存入Recorder[0]
-            RecorderList.Add(T.Text);                           //紀錄A的值為字串存入RecorderList[在List 裡新增string 字串]
+            //RecorderList.Add(T.Text);                           //紀錄A的值為字串存入RecorderList[在List 裡新增string 字串]
             //T.Text = "0";                                     //不要把看板數字歸0(因為不符合人類看到計算機的直覺,而是應該要保留已輸入的數字)
             op = ((Button)sender).Tag.ToString();               //接著用op來紀錄目前點選之按鈕的Tag值(在bAdd下就是'+'了)
             //Recorder[1] = ((Button)sender).Tag.ToString();      //紀錄op的值為字串存入Recorder[1]
@@ -145,23 +144,14 @@ namespace WindowsFormsApplicationCH5
             //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
             RecorderList.Add(T.Text);  //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
                                        //我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
-            C = 0;                               //宣告'變數C'準備承接計算的結果
-            switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
-            {
-                case "+": C = helper.add(A, B); break;
-                case "-": C = helper.sub(A, B); break;
-                case "*": C = helper.mul(A, B); break;
-                case "/": C = helper.div(A, B); break;
-            }
-            T.Text = C.ToString();               //把 答案C 顯示在看板上
+            double ans = helper.calculate(A, B, op);
+            T.Text = ans.ToString();
             //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
             RecorderList.Add(" = ");
             RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
             RecorderList.Add("N");               //因為要結算，特別在等號後的C接著再紀錄一個分隔符號，自定的，例如 N，因為簡易計算機應該不有Ｎ
             writeLog();                          //把運算過程寫入Log;
-            //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
-            C = 0;                               //把 C歸0
             A = Double.NaN;                      //把 = 後面加入運算子再加運算子後匯出的bug解掉
         }
 
@@ -170,27 +160,21 @@ namespace WindowsFormsApplicationCH5
             //按完Clear鍵之後, 這邊進入bEQ, 產生
             B = double.Parse(T.Text);            //用 B 來紀錄輸入的第二個數字
             //Recorder[2] = T.Text;                //紀錄B的值為字串存入Recorder[2]
-            RecorderList.Add(T.Text);   //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
-            RecorderList.Add(" === ");  //紀錄並區分前兩個運算元計算的結果
+           // RecorderList.Add(T.Text);   //紀錄B的符號為字串存入RecorderList[在List 裡新增string 字串]
+            //RecorderList.Add(" === ");  //紀錄並區分前兩個運算元計算的結果
             //我這邊在思考的是：似乎要將"="的功能分開，利用兩種不一樣的等號功能去區分最後結算用的等號功能還是連續運算用的等號功能
             //所以bEQ_OP_Click的功能，是用來給加減乘除鍵連續使用的
-            C = 0;                               //宣告'變數C'準備承接計算的結果
-            switch (op)                          //根據先前op的輸入結果(輸入加減乘除號的內部Tag值)來決定作何種運算
-            {
-                case "+": C = helper.add(A, B); break;
-                case "-": C = helper.sub(A, B); break;
-                case "*": C = helper.mul(A, B); break;
-                case "/": C = helper.div(A, B); break;
-            }
-            T.Text = C.ToString();               //把 答案C 顯示在看板上
+            double ans = helper.calculate(A, B, op);
+            T.Text = ans.ToString();
             //Recorder[3] = T.Text;                //紀錄C的值為字串存入Recorder[3]
 //            RecorderList.Add(T.Text);            //紀錄C的符號為字串存入RecorderList[在List 裡新增string 字串]
             //writeLog();                          //把運算過程寫入Log; 這裡是繼續相加減乘除，還不用寫檔
             //A = C;                               //把 答案C 設定給原來儲存在第一個計算數值A, 用來作連續運算使用(//把A = C先取消，但=後還是有問題)
             B = 0;                               //把 B歸0
-            C = 0;                               //把 C歸0
             A = Double.NaN;                      //把 = 後面加入運算子再加運算子後匯出的bug解掉
         }
+
+       
 
         //小數點
         private void bDot_Click(object sender, EventArgs e)
@@ -253,21 +237,24 @@ namespace WindowsFormsApplicationCH5
             //    console.writeline(line);
             //}
 
-            //
-            StreamWriter sw = new StreamWriter(@"C:\calculator_log.txt");
+            
+            StreamWriter sw = new StreamWriter(@"C:\calculator_log.txt", true);
 
-            sw.Write("\r\nLog Entry : ");
-            sw.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+            //sw.Write("\r\nLog Entry : ");
+            sw.Write("{0}#", DateTime.Now.ToString("yyyyMMddHHmmss"));
             for (int i = 0; i < RecorderList.Count; i++)        //把RecorderList內的所有紀錄一一寫出來
             {
                 if (RecorderList[i] == "N")
                 {
-                    sw.WriteLine(RecorderList[i]);              //遇到 N 的時候，寫入檔案最末並換行 [如：a, +, b, +, c, = , 5, N 然後換行]
+                    sw.WriteLine();              //遇到 N 的時候，寫入檔案最末並換行 [如：a, +, b, +, c, = , 5, N 然後換行]
                 }
-
-                sw.Write(RecorderList[i]);                      //沒遇到 N 的時候，一直在同一行寫下去 [如：a, +, b, +, c, = , 5]
+                else
+                {
+                    sw.Write(RecorderList[i]);  
+                }
+                                    //沒遇到 N 的時候，一直在同一行寫下去 [如：a, +, b, +, c, = , 5]
             }//研究foreach的寫法，我試著寫了一次發現有點問題，再找時間研究
-            sw.WriteLine("-------------------------------");
+            //sw.WriteLine("-------------------------------");
 
             sw.Close();                                         //關檔並紀錄 sw 用來入.txt檔案中
 
